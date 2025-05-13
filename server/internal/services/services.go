@@ -18,4 +18,7 @@ type Service interface {
 	Login(req models.LoginRequest) (models.UserRole, string, error)
 	CreateSpeaker(req models.CreateSpeakerRequest) (models.Speaker, error)
 	CreateOrganizer(req models.CreateOrganizerRequest) (models.Organizer, error)
+	CreateTalk(req models.CreateTalkRequest, user models.UserRole) (models.Talk, error)
+	UpdateTalk(id string, req models.UpdateTalkRequest) (models.Talk, error)
+	DeleteTalk(id string) (models.Talk, error)
 }

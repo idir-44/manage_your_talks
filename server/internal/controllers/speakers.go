@@ -22,9 +22,3 @@ func (r controller) registerSpeaker(c echo.Context) error {
 	return c.JSON(http.StatusCreated, speaker)
 
 }
-
-func (r controller) protectedRoute(c echo.Context) error {
-
-	return c.String(http.StatusOK, "A protected route !\n")
-
-}
