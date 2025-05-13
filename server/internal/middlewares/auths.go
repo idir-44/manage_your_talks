@@ -44,8 +44,7 @@ func IsUserAuthenticated(roles []models.Role, next echo.HandlerFunc) echo.Handle
 
 		for _, role := range roles {
 			if userRole.Role == role {
-				next(c)
-				return nil
+				return next(c)
 			}
 		}
 

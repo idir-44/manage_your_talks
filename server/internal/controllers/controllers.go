@@ -20,9 +20,10 @@ func RegisterHandlers(routerGroup *server.Router, srv services.Service) {
 
 	routerGroup.POST("/speakers", c.registerSpeaker)
 	routerGroup.GET("/me", c.getCurrentUser)
-
 	routerGroup.POST("/login", c.login)
 
-	routerGroup.GET("/protected-route", middlewares.IsUserAuthenticated(IsSpeaker, c.protectedRoute))
+	routerGroup.POST("/talks", middlewares.IsUserAuthenticated(IsSpeaker, c.postTalk))
+	routerGroup.PATCH("/talks/:id", middlewares.IsUserAuthenticated(IsSpeaker, c.patchTalk))
+	routerGroup.DELETE("/talks/:id", middlewares.IsUserAuthenticated(IsSpeaker, c.deleteTalk))
 
 }

@@ -31,10 +31,13 @@ func ParseToken(tokenString, key string) (models.UserRole, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &jwtClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
 	})
+	if err != nil {
+		return models.UserRole{}, fmt.Errorf("error parsing token: %s", err)
+	}
 
 	if claims, ok := token.Claims.(*jwtClaims); ok && token.Valid {
 		return claims.UserRole, nil
 	} else {
-		return models.UserRole{}, fmt.Errorf("error parsing token: %s", err)
+		return models.UserRole{}, fmt.Errorf("invalid token")
 	}
 }
