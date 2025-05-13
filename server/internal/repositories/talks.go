@@ -50,7 +50,18 @@ func (r repository) UpdateTalk(id string, req models.UpdateTalkRequest) (models.
 		fieldsToUpdate["title"] = req.Title
 	}
 
-	_, err := r.db.NewUpdate().Model(&fieldsToUpdate).TableExpr("talks").Where("id = ?", id).Exec(context.TODO())
+	talk := models.Talk{}
+	_, err := r.db.NewUpdate().
+		Model(&fieldsToUpdate).
+		TableExpr("talks").
+		Where("id = ?", id).
+		Returning("*").
+		Exec(context.TODO())
 
-	return models.Talk{ID: id}, err
+	if err != nil {
+		return models.Talk{}, err
+	}
+
+	err = r.db.NewSelect().Model(&talk).Where("id = ?", id).Scan(context.TODO())
+	return talk, err
 }
