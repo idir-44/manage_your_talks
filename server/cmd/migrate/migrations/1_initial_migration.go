@@ -49,7 +49,7 @@ func init() {
 	`}
 
 	Migrations.MustRegister(func(ctx context.Context, db *bun.DB) error {
-		fmt.Print("initial migration up")
+		fmt.Println("initial migration up")
 		for _, q := range up {
 			_, err := db.Exec(q)
 			if err != nil {
@@ -58,7 +58,7 @@ func init() {
 		}
 		return nil
 	}, func(ctx context.Context, db *bun.DB) error {
-		fmt.Print("initial migration down")
+		fmt.Println("initial migration down")
 		for _, q := range down {
 			_, err := db.Exec(q)
 			if err != nil {

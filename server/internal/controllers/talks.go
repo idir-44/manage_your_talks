@@ -54,10 +54,42 @@ func (r controller) patchTalk(c echo.Context) error {
 	return c.JSON(http.StatusOK, talk)
 }
 
+func (r controller) updateTalkStatus(c echo.Context) error {
+	talkID := c.Param("id")
+
+	var req models.UpdateTalkRequest
+
+	if err := c.Bind(&req); err != nil {
+		return err
+	}
+
+	talk, err := r.service.UpdateTalkStatus(talkID, req)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, talk)
+}
+
 func (r controller) deleteTalk(c echo.Context) error {
 	talkID := c.Param("id")
 
 	talk, err := r.service.DeleteTalk(talkID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, talk)
+}
+
+func (r controller) scheduleTalk(c echo.Context) error {
+	var req models.ScheduleTalkRequest
+
+	if err := c.Bind(&req); err != nil {
+		return err
+	}
+
+	talk, err := r.service.ScheduleTalk(req)
 	if err != nil {
 		return err
 	}
