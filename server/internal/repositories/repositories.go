@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+
 	"github.com/idir-44/manage_your_talks/internal/models"
 	"github.com/uptrace/bun"
 )
@@ -23,4 +25,8 @@ type Repository interface {
 	DeleteTalk(id string) (models.Talk, error)
 	GetOrganizerByUserID(userID string) (models.Organizer, error)
 	GetSpeakerByUserID(userID string) (models.Speaker, error)
+	UpdateTalkStatus(id string, req models.UpdateTalkRequest) (models.Talk, error)
+	GetTalkByID(id string) (models.Talk, error)
+	CreatePlanning(planning models.Planning) (models.Planning, error)
+	IsOverlapping(roomID string, start time.Time, duration time.Duration) (bool, error)
 }

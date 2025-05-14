@@ -15,6 +15,7 @@ func RegisterHandlers(routerGroup *server.Router, srv services.Service) {
 	c := controller{srv}
 
 	IsSpeaker := []models.Role{models.UserRoleSpeaker}
+	IsOrganizer := []models.Role{models.UserRoleOrganizer}
 
 	routerGroup.Use(middlewares.AddCurentUser)
 
@@ -25,5 +26,7 @@ func RegisterHandlers(routerGroup *server.Router, srv services.Service) {
 	routerGroup.POST("/talks", middlewares.IsUserAuthenticated(IsSpeaker, c.postTalk))
 	routerGroup.PATCH("/talks/:id", middlewares.IsUserAuthenticated(IsSpeaker, c.patchTalk))
 	routerGroup.DELETE("/talks/:id", middlewares.IsUserAuthenticated(IsSpeaker, c.deleteTalk))
+	routerGroup.POST("/talks/schedule", middlewares.IsUserAuthenticated(IsOrganizer, c.scheduleTalk))
+	routerGroup.PATCH("/talks/organizer/:id", middlewares.IsUserAuthenticated(IsOrganizer, c.updateTalkStatus))
 
 }

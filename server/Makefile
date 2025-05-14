@@ -22,6 +22,9 @@ migration-init:
 migration-up:
 	${DOCKER_EXEC} go run ./cmd/migrate/main.go db migrate
 
+migration-down:
+	${DOCKER_EXEC} go run ./cmd/migrate/main.go db rollback
+
 reset:
 	make stop
 	make start 

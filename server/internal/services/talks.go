@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/idir-44/manage_your_talks/internal/models"
@@ -52,4 +53,51 @@ func (s services) UpdateTalk(id string, req models.UpdateTalkRequest) (models.Ta
 	req.Duration = &durationSeconds
 
 	return s.repository.UpdateTalk(id, req)
+}
+
+func (s services) UpdateTalkStatus(id string, req models.UpdateTalkRequest) (models.Talk, error) {
+	if req.Status != nil && *req.Status == models.TalkStatusPlanned {
+		return models.Talk{}, fmt.Errorf("cannot set it to planned manually")
+	}
+
+	return s.repository.UpdateTalkStatus(id, req)
+}
+
+func (s services) ScheduleTalk(req models.ScheduleTalkRequest) (models.Talk, error) {
+
+	talk, err := s.repository.GetTalkByID(req.TalkID)
+	if err != nil {
+		return models.Talk{}, err
+	}
+
+	hour := req.StartAt.Hour()
+	if !((hour >= 9 && hour < 12) || (hour >= 13 && hour < 19)) {
+		return models.Talk{}, fmt.Errorf("start time must be between 09–12 or 13–19")
+	}
+
+	duration := time.Duration(talk.Duration) * time.Second
+	overlap, err := s.repository.IsOverlapping(req.RoomID, req.StartAt, duration)
+	if err != nil {
+		return models.Talk{}, err
+	}
+
+	if overlap {
+		return models.Talk{}, fmt.Errorf("talk overlaps with another talk in this room")
+	}
+
+	planning := models.Planning{
+		RoomID:  req.RoomID,
+		TalkID:  req.TalkID,
+		StartAt: req.StartAt,
+	}
+
+	_, err = s.repository.CreatePlanning(planning)
+	if err != nil {
+		return models.Talk{}, err
+	}
+
+	status := models.TalkStatusPlanned
+	return s.repository.UpdateTalkStatus(talk.ID, models.UpdateTalkRequest{
+		Status: &status,
+	})
 }

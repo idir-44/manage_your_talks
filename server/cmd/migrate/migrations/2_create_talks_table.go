@@ -21,8 +21,8 @@ func init() {
 
 		  owner_id UUID NOT NULL,
 
-			created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-			updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+			created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+			updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
       FOREIGN KEY (owner_id) REFERENCES speakers(id) ON DELETE CASCADE
 		);
@@ -33,7 +33,7 @@ func init() {
 	`}
 
 	Migrations.MustRegister(func(ctx context.Context, db *bun.DB) error {
-		fmt.Print("create talks table")
+		fmt.Println("create talks table")
 		for _, q := range up {
 			_, err := db.Exec(q)
 			if err != nil {
@@ -42,7 +42,7 @@ func init() {
 		}
 		return nil
 	}, func(ctx context.Context, db *bun.DB) error {
-		fmt.Print("drop talks table")
+		fmt.Println("drop talks table")
 		for _, q := range down {
 			_, err := db.Exec(q)
 			if err != nil {

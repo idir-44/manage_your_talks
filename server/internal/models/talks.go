@@ -5,10 +5,10 @@ import "time"
 type TalkStatus = string
 
 const (
-	TalkStatusPending   TalkStatus = "pending"
-	TalkStatusAccepted  TalkStatus = "accepted"
-	TalkStatusDeclines  TalkStatus = "declined"
-	TalkStatusPlanified TalkStatus = "planified"
+	TalkStatusPending  TalkStatus = "pending"
+	TalkStatusAccepted TalkStatus = "accepted"
+	TalkStatusDeclined TalkStatus = "declined"
+	TalkStatusPlanned  TalkStatus = "planned"
 )
 
 type Talk struct {
@@ -33,13 +33,20 @@ type CreateTalkRequest struct {
 	Level       string `json:"level" binding:"required"`
 }
 
+type ScheduleTalkRequest struct {
+	TalkID  string    `json:"talkId"`
+	RoomID  string    `json:"roomId"`
+	StartAt time.Time `json:"startAt"`
+}
+
 type UpdateTalkRequest struct {
-	Title       *string `json:"title"`
-	Topic       *string `json:"topic"`
-	Description *string `json:"description"`
-	Hours       *int64  `json:"hours"`
-	Minutes     *int64  `json:"minutes"`
-	Level       *string `json:"level"`
+	Title       *string     `json:"title"`
+	Topic       *string     `json:"topic"`
+	Description *string     `json:"description"`
+	Hours       *int64      `json:"hours"`
+	Minutes     *int64      `json:"minutes"`
+	Level       *string     `json:"level"`
+	Status      *TalkStatus `json:"status"`
 
 	Duration *int64
 }

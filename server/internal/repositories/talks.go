@@ -50,7 +50,6 @@ func (r repository) UpdateTalk(id string, req models.UpdateTalkRequest) (models.
 		fieldsToUpdate["title"] = req.Title
 	}
 
-	talk := models.Talk{}
 	_, err := r.db.NewUpdate().
 		Model(&fieldsToUpdate).
 		TableExpr("talks").
@@ -62,6 +61,25 @@ func (r repository) UpdateTalk(id string, req models.UpdateTalkRequest) (models.
 		return models.Talk{}, err
 	}
 
-	err = r.db.NewSelect().Model(&talk).Where("id = ?", id).Scan(context.TODO())
+	return r.GetTalkByID(id)
+}
+
+func (r repository) UpdateTalkStatus(id string, req models.UpdateTalkRequest) (models.Talk, error) {
+	if req.Status != nil {
+		_, err := r.db.NewUpdate().Model((*models.Talk)(nil)).Set("status = ?", req.Status).Where("id = ?", id).Exec(context.TODO())
+		if err != nil {
+			return models.Talk{}, err
+		}
+		return r.GetTalkByID(id)
+	}
+
+	return models.Talk{}, nil
+}
+
+func (r repository) GetTalkByID(id string) (models.Talk, error) {
+	talk := models.Talk{}
+	err := r.db.NewSelect().Model(&talk).Where("id = ?", id).Scan(context.TODO())
+
 	return talk, err
+
 }
