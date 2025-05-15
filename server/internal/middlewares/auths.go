@@ -25,7 +25,7 @@ func AddCurentUser(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		user, err := jwttoken.ParseToken(cookies.Value, key)
 		if err != nil {
-			return err
+			return next(c)
 		}
 
 		c.Set("user", user)

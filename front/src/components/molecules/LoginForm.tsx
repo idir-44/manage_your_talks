@@ -1,41 +1,35 @@
-import { useState } from "react"
-import { useUserStore } from "@/stores/userStore"
-import { useNavigate } from "@tanstack/react-router"
-import { login } from "@/api/auth"
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { login } from "@/api/auth";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const { setUser } = useUserStore()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     try {
-      await login(email, password)
+      await login(email, password);
 
-      // Pas besoin de récupérer le token ici, il est stocké dans un cookie HTTP Only
-      setUser({
-        token: "from-cookie", // ou null, le plus important est de stocker le rôle et l'email
-        role: "conférencier", // à ajuster si ton backend le renvoie (sinon tu peux faire un GET /me après)
-        email,
-      })
-
-      navigate({ to: "/dashboard" })
+      navigate({ to: "/dashboard" });
     } catch (err: any) {
-      setError("Email ou mot de passe invalide.")
-      console.error("Erreur de connexion :", err.message)
+      setError("Email ou mot de passe invalide.");
+      console.error("Erreur de connexion :", err.message);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
           Email
         </label>
         <input
@@ -50,7 +44,10 @@ const LoginForm = () => {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700"
+        >
           Mot de passe
         </label>
         <input
@@ -73,7 +70,7 @@ const LoginForm = () => {
         Se connecter
       </button>
     </form>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;
