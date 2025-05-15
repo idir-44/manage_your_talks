@@ -7,6 +7,10 @@ import (
 	"github.com/idir-44/manage_your_talks/internal/models"
 )
 
+func (s services) GetTalks(req models.GetTalksRequest) ([]models.Talk, error) {
+	return s.repository.GetTalks(req)
+}
+
 func (s services) CreateTalk(req models.CreateTalkRequest, user models.UserRole) (models.Talk, error) {
 	talk := models.Talk{
 		Title:       req.Title,
@@ -14,14 +18,8 @@ func (s services) CreateTalk(req models.CreateTalkRequest, user models.UserRole)
 		Description: req.Description,
 		Level:       req.Level,
 		Status:      models.TalkStatusPending,
+		OwnerID:     user.ID,
 	}
-
-	speaker, err := s.repository.GetSpeakerByUserID(user.ID)
-	if err != nil {
-		return models.Talk{}, err
-	}
-
-	talk.OwnerID = speaker.ID
 
 	duration := time.Duration(req.Hours)*time.Hour + time.Duration(req.Minutes)*time.Minute
 	talk.Duration = int64(duration.Seconds())
@@ -70,11 +68,6 @@ func (s services) ScheduleTalk(req models.ScheduleTalkRequest) (models.Talk, err
 		return models.Talk{}, err
 	}
 
-	hour := req.StartAt.Hour()
-	if !((hour >= 9 && hour < 12) || (hour >= 13 && hour < 19)) {
-		return models.Talk{}, fmt.Errorf("start time must be between 09–12 or 13–19")
-	}
-
 	duration := time.Duration(talk.Duration) * time.Second
 	overlap, err := s.repository.IsOverlapping(req.RoomID, req.StartAt, duration)
 	if err != nil {
@@ -82,7 +75,7 @@ func (s services) ScheduleTalk(req models.ScheduleTalkRequest) (models.Talk, err
 	}
 
 	if overlap {
-		return models.Talk{}, fmt.Errorf("talk overlaps with another talk in this room")
+		return models.Talk{}, fmt.Errorf("talk time overlaps with another talk in this room")
 	}
 
 	planning := models.Planning{

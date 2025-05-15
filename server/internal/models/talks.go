@@ -22,6 +22,9 @@ type Talk struct {
 	OwnerID     string    `json:"owner_id"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+
+	RoomName string    `json:"roomName" bun:"room_name,scanonly"`
+	StartAt  time.Time `json:"startAt" bun:"start_at,scanonly"`
 }
 
 type CreateTalkRequest struct {
@@ -52,7 +55,7 @@ type UpdateTalkRequest struct {
 }
 
 type GetTalksRequest struct {
-	OwnerID string `json:"owner_id"`
-	Status  string `json:"status"`
-	Level   string `json:"level"`
+	OwnerID string `query:"ownerId"`
+	Status  string `query:"status"`
+	Level   string `query:"level"`
 }

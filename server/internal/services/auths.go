@@ -20,17 +20,20 @@ func (s services) Login(req models.LoginRequest) (models.UserRole, string, error
 	}
 
 	var role models.Role
+	var userID string
 
-	_, err = s.repository.GetSpeakerByUserID(user.ID)
+	speaker, err := s.repository.GetSpeakerByUserID(user.ID)
 	if err == nil {
 		role = models.UserRoleSpeaker
+		userID = speaker.ID
 	}
 
-	_, err = s.repository.GetOrganizerByUserID(user.ID)
+	organizer, err := s.repository.GetOrganizerByUserID(user.ID)
 	if err == nil && role != "" {
 		return models.UserRole{}, "", fmt.Errorf("user cannot have two roles")
 	} else if err == nil {
 		role = models.UserRoleOrganizer
+		userID = organizer.ID
 	}
 
 	// TODO: parse env variables at server start
@@ -40,7 +43,7 @@ func (s services) Login(req models.LoginRequest) (models.UserRole, string, error
 	}
 
 	userRole := models.UserRole{
-		ID:    user.ID,
+		ID:    userID,
 		Email: user.Email,
 		Role:  role,
 	}

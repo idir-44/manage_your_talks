@@ -21,6 +21,8 @@ type Service interface {
 	CreateTalk(req models.CreateTalkRequest, user models.UserRole) (models.Talk, error)
 	UpdateTalk(id string, req models.UpdateTalkRequest) (models.Talk, error)
 	DeleteTalk(id string) (models.Talk, error)
+	GetTalks(req models.GetTalksRequest) ([]models.Talk, error)
 	UpdateTalkStatus(id string, req models.UpdateTalkRequest) (models.Talk, error)
+	GetAllRooms() ([]models.Room, error)
 	ScheduleTalk(req models.ScheduleTalkRequest) (models.Talk, error)
 }

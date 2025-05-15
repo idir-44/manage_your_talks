@@ -11,12 +11,27 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
-import { Route as RegisterIndexImport } from './routes/register/index'
-import { Route as LoginIndexImport } from './routes/login/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as AuthSpeakerImport } from './routes/_auth.speaker'
+import { Route as AuthOrganizerImport } from './routes/_auth.organizer'
+import { Route as AuthSpeakerDashboardImport } from './routes/_auth.speaker.dashboard'
+import { Route as AuthOrganizerDashboardImport } from './routes/_auth.organizer.dashboard'
 
 // Create/Update Routes
+
+const RegisterRoute = RegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -24,22 +39,28 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const RegisterIndexRoute = RegisterIndexImport.update({
-  id: '/register/',
-  path: '/register/',
+const AuthSpeakerRoute = AuthSpeakerImport.update({
+  id: '/_auth/speaker',
+  path: '/speaker',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginIndexRoute = LoginIndexImport.update({
-  id: '/login/',
-  path: '/login/',
+const AuthOrganizerRoute = AuthOrganizerImport.update({
+  id: '/_auth/organizer',
+  path: '/organizer',
   getParentRoute: () => rootRoute,
 } as any)
 
-const DashboardIndexRoute = DashboardIndexImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
-  getParentRoute: () => rootRoute,
+const AuthSpeakerDashboardRoute = AuthSpeakerDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthSpeakerRoute,
+} as any)
+
+const AuthOrganizerDashboardRoute = AuthOrganizerDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthOrganizerRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -53,75 +74,153 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/login/': {
-      id: '/login/'
+    '/login': {
+      id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginIndexImport
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/register/': {
-      id: '/register/'
+    '/register': {
+      id: '/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof RegisterIndexImport
+      preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
+    }
+    '/_auth/organizer': {
+      id: '/_auth/organizer'
+      path: '/organizer'
+      fullPath: '/organizer'
+      preLoaderRoute: typeof AuthOrganizerImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/speaker': {
+      id: '/_auth/speaker'
+      path: '/speaker'
+      fullPath: '/speaker'
+      preLoaderRoute: typeof AuthSpeakerImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/organizer/dashboard': {
+      id: '/_auth/organizer/dashboard'
+      path: '/dashboard'
+      fullPath: '/organizer/dashboard'
+      preLoaderRoute: typeof AuthOrganizerDashboardImport
+      parentRoute: typeof AuthOrganizerImport
+    }
+    '/_auth/speaker/dashboard': {
+      id: '/_auth/speaker/dashboard'
+      path: '/dashboard'
+      fullPath: '/speaker/dashboard'
+      preLoaderRoute: typeof AuthSpeakerDashboardImport
+      parentRoute: typeof AuthSpeakerImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthOrganizerRouteChildren {
+  AuthOrganizerDashboardRoute: typeof AuthOrganizerDashboardRoute
+}
+
+const AuthOrganizerRouteChildren: AuthOrganizerRouteChildren = {
+  AuthOrganizerDashboardRoute: AuthOrganizerDashboardRoute,
+}
+
+const AuthOrganizerRouteWithChildren = AuthOrganizerRoute._addFileChildren(
+  AuthOrganizerRouteChildren,
+)
+
+interface AuthSpeakerRouteChildren {
+  AuthSpeakerDashboardRoute: typeof AuthSpeakerDashboardRoute
+}
+
+const AuthSpeakerRouteChildren: AuthSpeakerRouteChildren = {
+  AuthSpeakerDashboardRoute: AuthSpeakerDashboardRoute,
+}
+
+const AuthSpeakerRouteWithChildren = AuthSpeakerRoute._addFileChildren(
+  AuthSpeakerRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/login': typeof LoginIndexRoute
-  '/register': typeof RegisterIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/organizer': typeof AuthOrganizerRouteWithChildren
+  '/speaker': typeof AuthSpeakerRouteWithChildren
+  '/organizer/dashboard': typeof AuthOrganizerDashboardRoute
+  '/speaker/dashboard': typeof AuthSpeakerDashboardRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/login': typeof LoginIndexRoute
-  '/register': typeof RegisterIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/organizer': typeof AuthOrganizerRouteWithChildren
+  '/speaker': typeof AuthSpeakerRouteWithChildren
+  '/organizer/dashboard': typeof AuthOrganizerDashboardRoute
+  '/speaker/dashboard': typeof AuthSpeakerDashboardRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/register/': typeof RegisterIndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/_auth/organizer': typeof AuthOrganizerRouteWithChildren
+  '/_auth/speaker': typeof AuthSpeakerRouteWithChildren
+  '/_auth/organizer/dashboard': typeof AuthOrganizerDashboardRoute
+  '/_auth/speaker/dashboard': typeof AuthSpeakerDashboardRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/organizer'
+    | '/speaker'
+    | '/organizer/dashboard'
+    | '/speaker/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/register'
-  id: '__root__' | '/' | '/dashboard/' | '/login/' | '/register/'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/organizer'
+    | '/speaker'
+    | '/organizer/dashboard'
+    | '/speaker/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/register'
+    | '/_auth/organizer'
+    | '/_auth/speaker'
+    | '/_auth/organizer/dashboard'
+    | '/_auth/speaker/dashboard'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  LoginIndexRoute: typeof LoginIndexRoute
-  RegisterIndexRoute: typeof RegisterIndexRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+  AuthOrganizerRoute: typeof AuthOrganizerRouteWithChildren
+  AuthSpeakerRoute: typeof AuthSpeakerRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-  LoginIndexRoute: LoginIndexRoute,
-  RegisterIndexRoute: RegisterIndexRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
+  AuthOrganizerRoute: AuthOrganizerRouteWithChildren,
+  AuthSpeakerRoute: AuthSpeakerRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -135,22 +234,40 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/dashboard/",
-        "/login/",
-        "/register/"
+        "/login",
+        "/register",
+        "/_auth/organizer",
+        "/_auth/speaker"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx"
+    "/login": {
+      "filePath": "login.tsx"
     },
-    "/login/": {
-      "filePath": "login/index.tsx"
+    "/register": {
+      "filePath": "register.tsx"
     },
-    "/register/": {
-      "filePath": "register/index.tsx"
+    "/_auth/organizer": {
+      "filePath": "_auth.organizer.tsx",
+      "children": [
+        "/_auth/organizer/dashboard"
+      ]
+    },
+    "/_auth/speaker": {
+      "filePath": "_auth.speaker.tsx",
+      "children": [
+        "/_auth/speaker/dashboard"
+      ]
+    },
+    "/_auth/organizer/dashboard": {
+      "filePath": "_auth.organizer.dashboard.tsx",
+      "parent": "/_auth/organizer"
+    },
+    "/_auth/speaker/dashboard": {
+      "filePath": "_auth.speaker.dashboard.tsx",
+      "parent": "/_auth/speaker"
     }
   }
 }

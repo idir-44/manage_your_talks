@@ -9,6 +9,30 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (r controller) getTalks(c echo.Context) error {
+	user, err := helpers.GetUser(c)
+	if err != nil {
+		return err
+	}
+
+	var req models.GetTalksRequest
+
+	if err := c.Bind(&req); err != nil {
+		return err
+	}
+
+	if user.Role == models.UserRoleSpeaker && req.OwnerID == "" {
+		return fmt.Errorf("owner_id is required")
+	}
+
+	talks, err := r.service.GetTalks(req)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, talks)
+}
+
 func (r controller) postTalk(c echo.Context) error {
 	user, err := helpers.GetUser(c)
 	if err != nil {
@@ -91,7 +115,7 @@ func (r controller) scheduleTalk(c echo.Context) error {
 
 	talk, err := r.service.ScheduleTalk(req)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
 	return c.JSON(http.StatusOK, talk)
