@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "@tanstack/react-router"
-import Button from "@/components/atoms/Button"
+import { Button } from "@/components/atoms/button"
 import { useUserStore } from "@/stores/userStore"
 import { register } from "@/api/auth" // 👈 On importe la fonction API
 

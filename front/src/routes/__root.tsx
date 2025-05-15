@@ -1,15 +1,13 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router"
-import Header from "@/components/organisms/Header"
-import Footer from "@/components/organisms/Footer"
+import { AuthProvider } from "@/components/templates/auth-provider"
+import { ThemeProvider } from "@/components/templates/theme-provider"
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <Header />
-      <main className="min-h-[calc(100vh-120px)] px-4">
-        <Outlet />
-      </main>
-      <Footer />
-    </>
+    <ThemeProvider>
+      <AuthProvider>
+        <Outlet /> {/* Toutes les routes de l’app passent ici */}
+      </AuthProvider>
+    </ThemeProvider>
   ),
 })

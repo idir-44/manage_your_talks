@@ -12,7 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as TermsIndexImport } from './routes/terms/index'
+import { Route as SpeakerIndexImport } from './routes/speaker/index'
 import { Route as RegisterIndexImport } from './routes/register/index'
+import { Route as PublicIndexImport } from './routes/public/index'
+import { Route as PrivacyIndexImport } from './routes/privacy/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 
@@ -24,9 +28,33 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const TermsIndexRoute = TermsIndexImport.update({
+  id: '/terms/',
+  path: '/terms/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SpeakerIndexRoute = SpeakerIndexImport.update({
+  id: '/speaker/',
+  path: '/speaker/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RegisterIndexRoute = RegisterIndexImport.update({
   id: '/register/',
   path: '/register/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PublicIndexRoute = PublicIndexImport.update({
+  id: '/public/',
+  path: '/public/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PrivacyIndexRoute = PrivacyIndexImport.update({
+  id: '/privacy/',
+  path: '/privacy/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,11 +95,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/privacy/': {
+      id: '/privacy/'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/public/': {
+      id: '/public/'
+      path: '/public'
+      fullPath: '/public'
+      preLoaderRoute: typeof PublicIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/register/': {
       id: '/register/'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/speaker/': {
+      id: '/speaker/'
+      path: '/speaker'
+      fullPath: '/speaker'
+      preLoaderRoute: typeof SpeakerIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/terms/': {
+      id: '/terms/'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -83,14 +139,22 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
+  '/privacy': typeof PrivacyIndexRoute
+  '/public': typeof PublicIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/speaker': typeof SpeakerIndexRoute
+  '/terms': typeof TermsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/login': typeof LoginIndexRoute
+  '/privacy': typeof PrivacyIndexRoute
+  '/public': typeof PublicIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/speaker': typeof SpeakerIndexRoute
+  '/terms': typeof TermsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -98,15 +162,44 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/privacy/': typeof PrivacyIndexRoute
+  '/public/': typeof PublicIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/speaker/': typeof SpeakerIndexRoute
+  '/terms/': typeof TermsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/privacy'
+    | '/public'
+    | '/register'
+    | '/speaker'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/register'
-  id: '__root__' | '/' | '/dashboard/' | '/login/' | '/register/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/login'
+    | '/privacy'
+    | '/public'
+    | '/register'
+    | '/speaker'
+    | '/terms'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard/'
+    | '/login/'
+    | '/privacy/'
+    | '/public/'
+    | '/register/'
+    | '/speaker/'
+    | '/terms/'
   fileRoutesById: FileRoutesById
 }
 
@@ -114,14 +207,22 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  PrivacyIndexRoute: typeof PrivacyIndexRoute
+  PublicIndexRoute: typeof PublicIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
+  SpeakerIndexRoute: typeof SpeakerIndexRoute
+  TermsIndexRoute: typeof TermsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  PrivacyIndexRoute: PrivacyIndexRoute,
+  PublicIndexRoute: PublicIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
+  SpeakerIndexRoute: SpeakerIndexRoute,
+  TermsIndexRoute: TermsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +238,11 @@ export const routeTree = rootRoute
         "/",
         "/dashboard/",
         "/login/",
-        "/register/"
+        "/privacy/",
+        "/public/",
+        "/register/",
+        "/speaker/",
+        "/terms/"
       ]
     },
     "/": {
@@ -149,8 +254,20 @@ export const routeTree = rootRoute
     "/login/": {
       "filePath": "login/index.tsx"
     },
+    "/privacy/": {
+      "filePath": "privacy/index.tsx"
+    },
+    "/public/": {
+      "filePath": "public/index.tsx"
+    },
     "/register/": {
       "filePath": "register/index.tsx"
+    },
+    "/speaker/": {
+      "filePath": "speaker/index.tsx"
+    },
+    "/terms/": {
+      "filePath": "terms/index.tsx"
     }
   }
 }
