@@ -62,7 +62,6 @@ export default function ScheduleTalkModal({
         return;
       }
       const hour = date.getHours();
-      console.log(hour);
       const isValidHour = (hour >= 9 && hour < 12) || (hour >= 13 && hour < 19);
       if (!isValidHour) {
         alert("Start time must be between 09–12 or 13–19");
